@@ -1,122 +1,80 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useCallback, useEffect, useState } from 'react'
+import { Builder } from './components/Builder'
+import { Cart } from './components/Cart'
+import { Checkout } from './components/Checkout'
+import { getMenu, getOrders, getState, removeItem, type MenuData, type Snapshot } from './api/client'
+import { useServerNow } from './hooks'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [menu, setMenu] = useState<MenuData | null>(null)
+  const [snap, setSnap] = useState<Snapshot | null>(null)
+  const [offset, setOffset] = useState(0)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [nonce, setNonce] = useState(0)
+  const [fatal, setFatal] = useState<string | null>(null)
+
+  const refresh = useCallback(async () => {
+    const s = await getState()
+    setOffset(s.serverTime - Date.now())
+    setSnap(s)
+  }, [])
+
+  useEffect(() => {
+    getMenu().then(setMenu).catch(() => setFatal('Could not load menu'))
+    refresh().catch(() => setFatal('Could not load server state'))
+  }, [refresh])
+
+  useEffect(() => {
+    const t = setInterval(() => { refresh().catch(() => {}) }, 10_000)
+    return () => clearInterval(t)
+  }, [refresh])
+
+  const now = useServerNow(offset)
+
+  const lapsed = snap?.items.some(i => !i.expired && now >= i.expiresAt) ?? false
+  useEffect(() => { if (lapsed) refresh().catch(() => {}) }, [lapsed, refresh])
+
+  if (fatal) return <p className="errors">{fatal}</p>
+  if (!menu || !snap) return <p>Loading…</p>
+
+
+  const items = snap.items.map(i => ({ ...i, expired: i.expired || now >= i.expiresAt }))
+  const active = items.filter(i => !i.expired).map(({ qty, options }) => ({ qty, options }))
+  const editing = items.find(i => i.id === editingId) ?? null
+
+  async function remove(id: string) {
+    await removeItem(id).catch(() => {})
+    refresh().catch(() => {})
+  }
+  async function download() {
+    const { orders } = await getOrders()
+    const body = { schemaVersion: 1, currency: 'BDT', currencyUnit: 'poisha', orders }
+    const blob = new Blob([JSON.stringify(body, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob); a.download = 'orders.json'; a.click()
+    URL.revokeObjectURL(a.href)
+  }
+  const dhaka = new Date(now + 6 * 3600_000).toISOString().slice(11, 19)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="app">
+      <header>
+        <h1>{menu.product.name}</h1>
+        <small>Server time (Dhaka): {dhaka}</small>
+        <button onClick={download}>Download orders.json</button>
+      </header>
+      <main>
+        <section>
+          <Builder key={`${editingId ?? 'new'}-${nonce}`} menu={menu} free={snap.free}
+            editingId={editingId} editing={editing} refresh={refresh}
+            onDone={() => { setEditingId(null); setNonce(n => n + 1) }} />
+        </section>
+        <section>
+          <Cart menu={menu} items={items} now={now} editingId={editingId}
+            onEdit={setEditingId} onRemove={remove} />
+          <Checkout active={active} onPaid={refresh} />
+        </section>
+      </main>
+    </div>
   )
 }
-
-export default App
