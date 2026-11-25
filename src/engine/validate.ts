@@ -6,7 +6,6 @@ export function validate(config: Counts, groups: Group[], rules: Rule[]): Violat
   const name = (id: string) =>
     groups.flatMap(g => g.options).find(o => o.id === id)?.name ?? id
 
-  // overrideLimit: base max-এর বদলে override বসে (একাধিক হলে সবচেয়ে ছোটটা)
   const overrides = new Map<string, number>()
   for (const r of rules)
     if (r.type === 'overrideLimit' && sel(r.when) > 0)
