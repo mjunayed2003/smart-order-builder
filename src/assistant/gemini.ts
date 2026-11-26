@@ -10,7 +10,7 @@ export class GeminiError extends Error {
 export function errorMessage(e: unknown): string {
   if (e instanceof GeminiError) {
     switch (e.kind) {
-      case 'missing_key': return 'Gemini API key is missing. Add GEMINI_API_KEY to .env.local and restart the dev server.'
+      case 'missing_key': return 'Gemini API key is missing. Add VITE_GEMINI_API_KEY to .env.local and restart the dev server.'
       case 'invalid_key': return 'Gemini API key is invalid. Check the key in .env.local.'
       case 'quota': return 'Gemini quota exceeded (429). Wait a bit and try again.'
       case 'network': return 'Network error: could not reach Gemini. Check your connection.'
@@ -68,9 +68,9 @@ async function callModel(body: unknown, key: string, model: string, fetchFn: typ
 }
 
 export async function askAssistant(question: string, deps: Deps): Promise<string> {
-  const key = deps.apiKey ?? (import.meta.env.GEMINI_API_KEY as string | undefined)
+  const key = deps.apiKey ?? (import.meta.env.VITE_GEMINI_API_KEY as string | undefined)
   if (!key) throw new GeminiError('missing_key', 'missing key')
-  const model = deps.model ?? (import.meta.env.GEMINI_MODEL as string | undefined) ?? 'gemini-2.5-flash'
+  const model = deps.model ?? (import.meta.env.VITE_GEMINI_MODEL as string | undefined) ?? 'gemini-2.5-flash'
   const fetchFn = deps.fetchFn ?? fetch.bind(globalThis)
   const tools = [{ functionDeclarations: declarations }]
   const systemInstruction = { parts: [{ text: systemText() }] }
