@@ -11,12 +11,15 @@ export type StoredItem = {
   reservedAt: number; expiresAt: number; expired: boolean
 }
 export type Snapshot = { serverTime: number; version: number; items: StoredItem[]; free: Usage }
+
 export type OrderDto = {
   id: string; createdAt: string; paymentMethod: string
   couponEntered: string | null; couponApplied: boolean
+  lines: { qty: number; options: Record<string, number>; unitPrice: number; total: number }[]
   totals: { subtotal: number; discountType: string | null; discount: number
     discounted: number; vat: number; payable: number }
 }
+
 export type ApiError = {
   status?: number; error?: string; message?: string; short?: Usage
   violations?: { id: string; message: string }[]
@@ -61,3 +64,4 @@ export function errorText(e: unknown): string {
   if (er.message) return er.message
   return 'Network or server problem. Your input is kept, press Retry.'
 }
+
