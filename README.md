@@ -20,11 +20,11 @@ npx tsc -b                      # type check
 `.env.local`:
 
 ```
-VITE_GEMINI_API_KEY=your_key
-VITE_GEMINI_MODEL=<a flash model name your key can use>
+GEMINI_API_KEY=your_key
+GEMINI_MODEL=<a flash model name your key can use>
 ```
 
-`VITE_GEMINI_MODEL` is optional, the code has a default. If the bot shows a model-not-found error (404), that model name is not available for your key: set this variable to a Flash model listed in your Google AI Studio and restart the dev server (Vite reads `.env.local` only at start).
+`GEMINI_MODEL` is optional, the code has a default. If the bot shows a model-not-found error (404), that model name is not available for your key: set this variable to a Flash model listed in your Google AI Studio and restart the dev server (Vite reads `.env.local` only at start).
 
 The key is read in the browser, which the brief allows for this task. It means anyone who opens the app can see the key, so use a throwaway key.
 
