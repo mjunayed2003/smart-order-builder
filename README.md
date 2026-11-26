@@ -138,4 +138,4 @@ TC-17 (refresh, then Download orders.json) and TC-19 (bot answer changes with th
 
 ## Time spent
 
-<fill hours here : engine 2.5h, mock server 2.5h, UI 2h, assistant 2h, tests 1h, docs 1h = 11h>
+<fill hours here : engine 1h, mock server 1h, UI 1h, assistant 1h, tests 1h, docs 1h = 6h>
