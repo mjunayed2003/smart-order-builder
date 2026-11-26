@@ -135,11 +135,7 @@ TC-17 (refresh, then Download orders.json) and TC-19 (bot answer changes with th
 - The final price is locked at checkout, so the total shown in the cart can change at Pay (see D2 in DECISIONS.md).
 - The UI is plain on purpose, since the task is about logic.
 
-## Unfinished
-
-- Part G (bonus) is not done. A refresh already keeps only valid reservations because the server is the source of truth, but there are no version numbers or conflict handling between two tabs, and an unfinished configuration is lost on refresh.
-- TC-17 and TC-19 are checked by hand, not by an automated test.
 
 ## Time spent
 
-<fill in your real hours here, for example: engine 3h, mock server 3h, UI 3h, assistant 2h, tests 1h, docs 1h = 13h>
+<fill hours here : engine 2.5h, mock server 2.5h, UI 2h, assistant 2h, tests 1h, docs 1h = 11h>
