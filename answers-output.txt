@@ -1,0 +1,68 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.1.2 [39m[90m/media/junayed/New Volume/React/smart-order-builder[39m
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ1: max C from empty cart
+[22m[39mQ1: max C = 2; limited by: [ [32m'cheese'[39m ]
+Q1 free stock after: {
+  egg: [33m6[39m,
+  sausage: [33m4[39m,
+  bacon: [33m3[39m,
+  tofu: [33m3[39m,
+  croissant: [33m2[39m,
+  paratha: [33m8[39m,
+  toast: [33m20[39m,
+  hashbrown: [33m6[39m,
+  mushroom: [33m4[39m,
+  beans: [33m6[39m,
+  cheese: [33m0[39m,
+  hollandaise: [33m5[39m
+}
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ2: cheapest valid configuration
+[22m[39mQ2: cheapest = 360.00 BDT { toast: [33m1[39m, fried: [33m2[39m, tofu: [33m1[39m }
+
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ1: max C from empty cart[32m 2[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ2: cheapest valid configuration[33m 2061[2mms[22m[39m
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ3: A x3 at 10:30 and 11:30
+[22m[39mQ3 10:30 unit=380.00 subtotal=1,140.00 discount=C2 150.00 after=990.00 vat=49.50 payable=1,040.00 couponRejected=false
+Q3 11:30 unit=380.00 subtotal=1,140.00 discount=null 0.00 after=1,140.00 vat=57.00 payable=1,197.00 couponRejected=true
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ4: after TC-10, payable at 11:30
+[22m[39mQ4 subtotal=1,623.50 discount=C1 100.00 vat=76.18 payable=1,600.00
+Q4 egg remaining: [33m1[39m
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ5: payable per seed order and total
+[22m[39mQ5 ORD-1001 payable=339.00
+Q5 ORD-1002 payable=713.00
+Q5 ORD-1003 payable=1,271.00
+Q5 ORD-1004 payable=578.00
+Q5 ORD-1005 payable=866.00
+Q5 ORD-1006 payable=1,228.00
+Q5 total revenue = 4,995.00
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ6: best-selling option
+[22m[39mQ6 { units: [33m10[39m, leaders: [ { id: [32m'fried'[39m, name: [32m'Fried'[39m } ] }
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ7: revenue by payment method
+[22m[39mQ7 { card: [32m'2,145.00'[39m, bkash: [32m'1,579.00'[39m, cash: [32m'1,271.00'[39m }
+
+[90mstdout[2m | src/test/answers.test.ts[2m > [22m[2mQ8: coupon actually applied
+[22m[39mQ8 ORD-1001 at 2026-11-20T09:15:00+06:00 subtotal=380.00 applied=true reason=null discount=C2 57.00
+Q8 ORD-1003 at 2026-11-21T10:05:00+06:00 subtotal=1,360.00 applied=true reason=null discount=C2 150.00
+Q8 ORD-1005 at 2026-11-22T08:50:00+06:00 subtotal=970.00 applied=true reason=null discount=C2 145.50
+Q8 ORD-1006 at 2026-11-22T13:10:00+06:00 subtotal=1,169.50 applied=false reason=expired discount=null 0.00
+Q8 applied count = [33m3[39m
+
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ3: A x3 at 10:30 and 11:30[32m 1[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ4: after TC-10, payable at 11:30[32m 1[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ5: payable per seed order and total[32m 1[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ6: best-selling option[32m 1[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ7: revenue by payment method[32m 0[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22mQ8: coupon actually applied[32m 0[2mms[22m[39m
+ [32m✓[39m src/test/answers.test.ts[2m > [22msanity: remainingFor is usable[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 15:05:46
+[2m   Duration [22m 2.53s[2m (tests 85%, environment 12%, setup 2%, transform 1%)[22m
+
