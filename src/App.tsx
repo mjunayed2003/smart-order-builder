@@ -4,6 +4,7 @@ import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { getMenu, getOrders, getState, removeItem, type MenuData, type Snapshot } from './api/client'
 import { useServerNow } from './hooks'
+import { Chat } from './components/Chat'
 
 export default function App() {
   const [menu, setMenu] = useState<MenuData | null>(null)
@@ -73,6 +74,7 @@ export default function App() {
           <Cart menu={menu} items={items} now={now} editingId={editingId}
             onEdit={setEditingId} onRemove={remove} />
           <Checkout active={active} onPaid={refresh} />
+          <Chat menu={menu} />
         </section>
       </main>
     </div>
